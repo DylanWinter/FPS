@@ -5,6 +5,8 @@
 #include <iostream>
 #include <vector>
 
+bool draw2d = false;
+
 const int WIDTH = 800;
 const int HEIGHT = 600;
 
@@ -13,9 +15,6 @@ const int TOPDOWN_HEIGHT = 400;
 
 const float moveSpeed = 0.1f;
 const float rotSpeed = 0.05f;
-
-const int mapw = 10;
-const int maph = 10;
 
 const SDL_Color BLUE = { 0, 0, 255, 255 };
 const SDL_Color YELLOW = { 255, 255, 0, 255 };
@@ -26,18 +25,33 @@ const SDL_Color BLACK = { 0, 0, 0, 255 };
 
 std::vector<SDL_Color> colors = { BLACK, GREY, RED, BLUE, GREEN, YELLOW };
 
+SDL_Renderer* topDownRenderer;
+SDL_Window* topDownWindow;
+
+const int mapw = 30;
+const int maph = 30;
 int map[mapw][maph] = {
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 1, 1, 0, 0, 1, 1, 1, 0},
-    {0, 0, 0, 0, 0, 0, 1, 1, 1, 0},
-    {0, 0, 0, 0, 0, 0, 1, 1, 1, 0},
-    {0, 0, 0, 0, 0, 0, 1, 1, 1, 0},
-    {0, 0, 0, 0, 0, 0, 1, 1, 1, 0},
-    {0, 0, 0, 0, 0, 0, 1, 1, 1, 0},
-    {0, 0, 0, 0, 0, 0, 1, 1, 1, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
+
 
 typedef struct {
     float x;
@@ -129,15 +143,29 @@ int main()
     }
 
     // init top-down window
-    SDL_Window* topDownWindow = SDL_CreateWindow("Top-Down View",
-        SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        TOPDOWN_WIDTH, TOPDOWN_HEIGHT,
-        0);
-    if (!topDownWindow)
-    {
-        std::cout << "Failed to create top-down window" << std::endl;
-        return -1;
+    if (draw2d) {
+        SDL_Window* topDownWindow = SDL_CreateWindow("Top-Down View",
+            SDL_WINDOWPOS_CENTERED,
+            SDL_WINDOWPOS_CENTERED,
+            TOPDOWN_WIDTH, TOPDOWN_HEIGHT,
+            0);
+
+
+        if (!topDownWindow)
+        {
+            std::cout << "Failed to create top-down window" << std::endl;
+            return -1;
+        }
+
+        topDownRenderer = SDL_CreateRenderer(
+            topDownWindow,                       // Top-down window renderer
+            -1,                             // Use the first available driver
+            SDL_RENDERER_ACCELERATED      // Enable hardware acceleration
+        );
+        if (!topDownRenderer) {
+            std::cerr << "Failed to create top-down renderer: " << SDL_GetError() << std::endl;
+            return -1;
+        }
     }
 
     // init renderers
@@ -148,16 +176,6 @@ int main()
     );
     if (!renderer) {
         std::cerr << "Failed to create renderer: " << SDL_GetError() << std::endl;
-        return -1;
-    }
-
-    SDL_Renderer* topDownRenderer = SDL_CreateRenderer(
-        topDownWindow,                       // Top-down window renderer
-        -1,                             // Use the first available driver
-        SDL_RENDERER_ACCELERATED      // Enable hardware acceleration
-    );
-    if (!topDownRenderer) {
-        std::cerr << "Failed to create top-down renderer: " << SDL_GetError() << std::endl;
         return -1;
     }
 
@@ -211,7 +229,7 @@ int main()
 
             // raycasting
             int numRays = WIDTH;
-            float fov = M_PI / 3; // 60 degree FOV
+            float fov = M_PI / 2.5f; // 72 degree FOV
             for (int i = 0; i < numRays; i++)
             {
                 float rayAngle = (player.angle - fov / 2) + ((float)i / numRays) * fov;
@@ -248,10 +266,12 @@ int main()
             }
 
             // top-down window rendering
-            SDL_SetRenderDrawColor(topDownRenderer, 0, 0, 0, 255);           
-            SDL_RenderClear(topDownRenderer);
-            drawTopDown(topDownRenderer, player);
-            SDL_SetRenderDrawColor(topDownRenderer, 255, 255, 0, 255);
+            if (draw2d) {
+                SDL_SetRenderDrawColor(topDownRenderer, 0, 0, 0, 255);
+                SDL_RenderClear(topDownRenderer);
+                drawTopDown(topDownRenderer, player);
+                SDL_SetRenderDrawColor(topDownRenderer, 255, 255, 0, 255);
+            }
 
             // update windows
             next_game_step += time_step_ms;
@@ -268,7 +288,7 @@ int main()
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(topDownRenderer);
-    SDL_DestroyWindow(topDownWindow);
+    if (draw2d) { SDL_DestroyWindow(topDownWindow); }
     SDL_Quit();
     return 0;
 }
