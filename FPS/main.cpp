@@ -27,7 +27,7 @@ const float moveSpeed = 0.1f;
 const float rotSpeed = 0.05f;
 const Vector2 startPos = { 15.0f, 14.0f };
 
-const SDL_Color BLUE = { 0, 0, 255, 255 };
+const SDL_Color BLUE = { 0, 255, 255, 255 };
 const SDL_Color YELLOW = { 255, 255, 0, 255 };
 const SDL_Color RED = { 255, 0, 0, 255 };
 const SDL_Color GREEN = { 0, 255, 0, 255 };
@@ -210,21 +210,24 @@ int main()
             const Uint8* keyState = SDL_GetKeyboardState(NULL);
             movementDir = getDirection(keyState);
             // move the player
+            Vector2 newPos = player.position;
             if (movementDir.y != 0) { // forward or backward
-                player.position.x += -movementDir.y * moveSpeed * cos(player.angle);
-                player.position.y += -movementDir.y * moveSpeed * sin(player.angle);
+                newPos.x += -movementDir.y * moveSpeed * cos(player.angle);
+                newPos.y += -movementDir.y * moveSpeed * sin(player.angle);
             }
             if (movementDir.x != 0) { // strafing
-                player.position.x += movementDir.x * moveSpeed * cos(player.angle + (M_PI / 2));
-                player.position.y += movementDir.x * moveSpeed * sin(player.angle + (M_PI / 2));
+                newPos.x += movementDir.x * moveSpeed * cos(player.angle + (M_PI / 2));
+                newPos.y += movementDir.x * moveSpeed * sin(player.angle + (M_PI / 2));
+            }
+            if (map[(int)newPos.x][(int)newPos.y] == 0) {
+                player.position = newPos;
             }
             player.angle += getRotation(keyState);
             // clamp angle
             player.angle = fmod(player.angle + 2 * M_PI, 2 * M_PI);
- 
 
             // main window rendering
-            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+            SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
             SDL_RenderClear(renderer);
 
             // raycasting
