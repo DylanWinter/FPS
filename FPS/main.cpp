@@ -219,8 +219,12 @@ int main()
                 newPos.x += movementDir.x * moveSpeed * cos(player.angle + (M_PI / 2));
                 newPos.y += movementDir.x * moveSpeed * sin(player.angle + (M_PI / 2));
             }
-            if (map[(int)newPos.x][(int)newPos.y] == 0) {
-                player.position = newPos;
+            // handle collisions with walls
+            if (map[(int)newPos.x][(int)player.position.y] == 0) {
+                player.position.x = newPos.x;
+            }
+            if (map[(int)player.position.x][(int)newPos.y] == 0) {
+                player.position.y = newPos.y;
             }
             player.angle += getRotation(keyState);
             // clamp angle
