@@ -1,14 +1,11 @@
 #define SDL_MAIN_HANDLED
 #include "SDL.h"
 #include "drawing.h"
+#include "utils.h"
+#include "input.h"
 #include <cmath>
 #include <iostream>
 #include <vector>
-
-typedef struct {
-    float x;
-    float y;
-} Vector2;
 
 typedef struct {
     Vector2 position;
@@ -23,8 +20,6 @@ const int HEIGHT = 600;
 const int TOPDOWN_WIDTH = 400;  // Dimensions of the top-down view window
 const int TOPDOWN_HEIGHT = 400;
 
-const float moveSpeed = 0.1f;
-const float rotSpeed = 0.05f;
 const Vector2 startPos = { 15.0f, 14.0f };
 
 const SDL_Color BLUE = { 0, 255, 255, 255 };
@@ -62,37 +57,6 @@ int map[mapw][maph] = {
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
-
-// gets direction from keyboard
-Vector2 getDirection(const Uint8* keyState) {
-    Vector2 dir = { 0, 0 };
-    if (keyState[SDL_SCANCODE_W]) {
-        dir.y = -1;
-    }
-    if (keyState[SDL_SCANCODE_S] && !keyState[SDL_SCANCODE_W]) {
-        dir.y = 1;
-    }
-    if (keyState[SDL_SCANCODE_A]) {
-        dir.x = -1;
-    }
-    if (keyState[SDL_SCANCODE_D] && !keyState[SDL_SCANCODE_A]) {
-        dir.x = 1;
-    }
-
-    return dir;
-}
-
-float getRotation(const Uint8* keyState) {
-    if (keyState[SDL_SCANCODE_LEFT] && !keyState[SDL_SCANCODE_RIGHT]) {
-        return -rotSpeed;
-    }
-    else if (!keyState[SDL_SCANCODE_LEFT] && keyState[SDL_SCANCODE_RIGHT]) {
-        return rotSpeed;
-    }
-    else {
-        return 0;
-    }
-}
 
 void drawWall(SDL_Renderer* renderer, int x, int height, SDL_Color color) {
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
