@@ -8,33 +8,12 @@
 #include <iostream>
 #include <vector>
 
-typedef struct {
-    Vector2 position;
-    float angle;
-} Player;
-
 bool draw2d = false;
-
-const int WIDTH = 800;
-const int HEIGHT = 600;
-
-const int TOPDOWN_WIDTH = 400;  // Dimensions of the top-down view window
-const int TOPDOWN_HEIGHT = 400;
 
 const Vector2 startPos = { 15.0f, 14.0f };
 
-const SDL_Color BLUE = { 0, 255, 255, 255 };
-const SDL_Color YELLOW = { 255, 255, 0, 255 };
-const SDL_Color RED = { 255, 0, 0, 255 };
-const SDL_Color GREEN = { 0, 255, 0, 255 };
-const SDL_Color GREY = { 128, 128, 128, 255 };
-const SDL_Color BLACK = { 0, 0, 0, 255 };
-
-std::vector<SDL_Color> colors = { BLACK, GREY, RED, BLUE, GREEN, YELLOW };
-
 SDL_Renderer* topDownRenderer;
 SDL_Window* topDownWindow;
-
 SDL_Texture* weapon;
 
 const int mapw = 30;
@@ -61,17 +40,12 @@ int map[mapw][maph] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
-void drawWall(SDL_Renderer* renderer, int x, int height, SDL_Color color) {
-    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-    SDL_RenderDrawLine(renderer, x, (HEIGHT - height) / 2, x, (HEIGHT + height) / 2);
-}
-
 void drawTopDown(SDL_Renderer* renderer, Player player) {
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
     // draw the player
     int x = (int)player.position.x * (TOPDOWN_WIDTH / mapw);
     int y = (int)player.position.y * (TOPDOWN_HEIGHT / maph);
-    DrawCircle(renderer, x, y, 10, YELLOW, true);
+    drawCircle(renderer, x, y, 10, YELLOW, true);
     // draw the view line
     int x2 = x + static_cast<int>(100 * std::cos(player.angle));
     int y2 = y + static_cast<int>(100 * std::sin(player.angle));
@@ -104,7 +78,7 @@ void fireShot(Player player) {
 
         // hit a wall!
         if (map[testX][testY] != 0) {
-            std::cout << map[testX][testY] << std::endl;
+            // for now we'll just change the colour, to confirm it's working
             map[testX][testY] = 5;
             break;
         }
@@ -285,6 +259,7 @@ int main()
                 SDL_SetRenderDrawColor(topDownRenderer, 255, 255, 0, 255);
             }
 
+            // draw the weapon 
             SDL_Rect pos;
             pos.w = 192;
             pos.h = 192;

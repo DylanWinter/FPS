@@ -1,6 +1,8 @@
 #include "SDL.h"
+#include "drawing.h"
+#include "utils.h"
 
-void DrawCircle(SDL_Renderer* renderer, int32_t centreX, int32_t centreY, int32_t radius, SDL_Color color, bool filled = true)
+void drawCircle(SDL_Renderer* renderer, int32_t centreX, int32_t centreY, int32_t radius, SDL_Color color, bool filled)
 {
     // save the current render color so it can be reverted later
     SDL_Color prev;
@@ -51,9 +53,11 @@ void DrawCircle(SDL_Renderer* renderer, int32_t centreX, int32_t centreY, int32_
         }
     }
 
-
-
-
     // revert draw color
     SDL_SetRenderDrawColor(renderer, prev.r, prev.g, prev.b, prev.a);
+}
+
+void drawWall(SDL_Renderer* renderer, int x, int height, SDL_Color color) {
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderDrawLine(renderer, x, (HEIGHT - height) / 2, x, (HEIGHT + height) / 2);
 }
