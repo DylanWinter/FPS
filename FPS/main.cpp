@@ -88,6 +88,36 @@ void drawTopDown(SDL_Renderer* renderer, Player player) {
     }
 }
 
+void fireShot(Player player) {
+    float rayAngle = player.angle;
+    float stepX = cos(rayAngle);
+    float stepY = sin(rayAngle);
+
+    float dist = 0.0f;
+    bool found = false;
+    int testX = 0; int testY = 0;
+
+    while (true) {
+        dist += 0.1f;
+        testX = (int)(player.position.x + stepX * dist);
+        testY = (int)(player.position.y + stepY * dist);
+
+        // hit a wall!
+        if (map[testX][testY] != 0) {
+            std::cout << map[testX][testY] << std::endl;
+            map[testX][testY] = 5;
+            break;
+        }
+
+        // put enemy hit condition here
+
+        // hit nothing
+        if (testX < 0 || testX >= mapw || testY < 0 || testY >= maph) {
+            break;
+        }
+    }
+}
+
 int main()
 {
     // init SDL
@@ -171,9 +201,15 @@ int main()
                     close_window = true;
                     std::cout << "closing window..." << std::endl;
                     break;
+                case SDL_KEYDOWN:
+                    if (e.key.keysym.sym == SDLK_SPACE)
+                    {
+                        printf("shot fired\n");
+                        fireShot(player);
+                    }
+                    break;
                 }
             }
-
             // get input
             SDL_PumpEvents();
             const Uint8* keyState = SDL_GetKeyboardState(NULL);
