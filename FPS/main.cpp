@@ -1,5 +1,6 @@
 #define SDL_MAIN_HANDLED
 #include "SDL.h"
+#include "SDL_image.h"
 #include "drawing.h"
 #include "utils.h"
 #include "input.h"
@@ -33,6 +34,8 @@ std::vector<SDL_Color> colors = { BLACK, GREY, RED, BLUE, GREEN, YELLOW };
 
 SDL_Renderer* topDownRenderer;
 SDL_Window* topDownWindow;
+
+SDL_Texture* weapon;
 
 const int mapw = 30;
 const int maph = 30;
@@ -143,6 +146,8 @@ int main()
         return -1;
     }
 
+    weapon = SDL_CreateTextureFromSurface(renderer, IMG_Load("assets/shotgun.png"));
+
     Uint32 time_step_ms = 1000 / 60;
     Uint32 next_game_step = SDL_GetTicks();
 
@@ -243,6 +248,13 @@ int main()
                 drawTopDown(topDownRenderer, player);
                 SDL_SetRenderDrawColor(topDownRenderer, 255, 255, 0, 255);
             }
+
+            SDL_Rect pos;
+            pos.w = 192;
+            pos.h = 192;
+            pos.x = (WIDTH / 2) - (pos.w / 2);
+            pos.y = (HEIGHT * 0.9) - (pos.h / 2);
+            SDL_RenderCopy(renderer, weapon, nullptr, &pos);
 
             // update windows
             next_game_step += time_step_ms;

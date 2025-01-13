@@ -120,13 +120,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\dylan\OneDrive\Desktop\FPS\SDL2-2.30.11\include;C:\Users\dylan\Desktop\projects\fps\SDL2-2.26.5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\dylan\OneDrive\Desktop\FPS\SDL2_image-2.8.4\include;C:\Users\dylan\OneDrive\Desktop\FPS\SDL2-2.30.11\include;C:\Users\dylan\Desktop\projects\fps\SDL2-2.26.5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\dylan\OneDrive\Desktop\FPS\SDL2-2.30.11\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\dylan\OneDrive\Desktop\FPS\SDL2_image-2.8.4\lib\x64;C:\Users\dylan\OneDrive\Desktop\FPS\SDL2-2.30.11\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
